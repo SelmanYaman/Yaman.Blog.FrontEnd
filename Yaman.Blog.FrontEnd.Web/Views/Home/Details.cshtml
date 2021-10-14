@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+
+    var comments = (List<CommentListModel>)ViewBag.Comments;
+
+    void GetComments(List<CommentListModel> comments)
+    {
+
+        if (comments.Count > 0)
+        {
+            foreach (var comment in comments)
+            {
+                <div class="card-body">
+                    <div class="d-flex my-2">
+                        <!-- Parent comment-->
+                        <div class="flex-shrink-0"><img src="/img/User.png" alt="" class="img-fluid d-flex mr-4 rounded"></div>
+                        <div class="ms-3">
+                            <div class="fw-bold">@comment.AuthorName</div>
+                            <p class="mt-2">@comment.Description</p>
+                            <!-- Child comment 1-->
+                            <button type="button" class="btn btn-sm btn-primary float-right"
+                                    onclick="showCommentForm(@comment.Id,@Model.Id)">
+                                Cevap Yaz <i class="fa fa-reply"></i>
+                            </button>
+                            <div id="commentBox@(comment.Id)" class="w-100">
+
+                            </div>
+                            @{
+                                GetComments(comment.SubComments);
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+}
+
+
+@model BlogListModel
+
+<div class="col-lg-12">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="blog-post">
+                <getBlogImage Id="@Model.Id" image-boyut="2"></getBlogImage>
+                <div class="mt-4 mb-3 d-flex">
+                    <div class="post-info">
+                        <i class="fa fa-calendar-check ml-2"></i>
+                        <span>Yayın Tarihi : @Model.PostedTime.ToShortDateString()</span>
+                    </div>
+                </div>
+
+                <h4> @Model.Title</h4>
+                <br />
+                @Html.Raw(@Model.Description)
+            </div>
+
+            <div class="comments my-4">
+                @if (comments.Count != 0)
+                {
+                    <h4 class="mb-5">Yapılan Yorumlar</h4>
+                }
+                <div>
+                    @{
+                        GetComments(comments);
+                    }
+                </div>
+            </div>
+
+
+            <div class="mt-5 mb-3">
+                <h3 class="mt-5 mb-2">Yorum Yaz</h3>
+                @*<p class="mb-4">We don't spam at your inbox.</p>*@
+                <form method="post" asp-action="AddToComment" class="row">
+                    <input type="hidden" name="BlogId" value="@Model.Id" />
+                    <div class="col-lg-12">
+                        <div class="form-group mb-3">
+                            <textarea cols="30" required rows="6" name="Description" class="form-control" placeholder="Mesaj"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group mb-3">
+                            <input type="text" required class="form-control" name="AuthorName" placeholder="Ad">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group mb-4">
+                            <input type="email" required class="form-control" name="AuthorEmail" placeholder="Email">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-hero btn-circled">Mesaj Gönder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section JavaScript{
+
+    <script>
+        function showCommentForm(id, blogId) {
+
+            let html = `<div class="mt-5 mb-3">
+                                <h3 class="mt-5 mb-2">Cevap Yaz</h3>
+                                <form method="post" action="/Home/AddToComment" class="row">
+                                    <input type="hidden" name="BlogId" value="${blogId}">
+                                    <input type="hidden" name="ParentCommentId" value="${id}">
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <textarea cols="30" required rows="6" name="Description" class="form-control" placeholder="Mesaj"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group mb-3">
+                                            <input type="text" required class="form-control" name="AuthorName" placeholder="Ad">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group mb-4">
+                                            <input type="email" required class="form-control" name="AuthorEmail" placeholder="Email">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-warning btn-circled" onclick="hideCommentForm(${id})">Vazgeç</button>
+                                        <button type="submit" class="btn btn-hero btn-circled">Mesaj Gönder</button>
+                                    </div>
+                                </form>
+                            </div>`;
+            $("#commentBox" + id).html(html);
+        }
+
+        function hideCommentForm(id) {
+            $("#commentBox" + id).html("");
+        }
+    </script>
+}

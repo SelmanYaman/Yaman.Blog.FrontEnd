@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@model List<CommentListModel>
+
+<h3 class="my-3">Onaylanmamış Yorumlar</h3>
+<table class="table table-bordered table-hover table-sm">
+    <tbody>
+        <tr>
+            <th>Yorumlar</th>
+            <th>İşlemler</th>
+        </tr>
+        @foreach (var blog in Model)
+        {
+            <tr>
+                <td>@blog.Description</td>
+                <td>
+                    <a asp-action="Approve" asp-route-id="@blog.Id" class="btn btn-warning btn-sm">Onayla</a>
+                    <a asp-action="Delete" asp-route-id="@blog.Id" class="btn btn-danger btn-sm">Sil</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

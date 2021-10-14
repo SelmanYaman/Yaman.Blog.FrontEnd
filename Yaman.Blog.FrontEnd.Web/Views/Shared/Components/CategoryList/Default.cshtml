@@ -1,0 +1,16 @@
+﻿@model List<CategoryListModel>
+<div class="col-lg-12">
+    <div class="sidebar-widget category">
+        <h4 class="mb-3">Kategoriler</h4>
+        <ul>
+            @foreach (var item in Model)
+            {
+                <li>
+                    <a asp-action="Index" asp-route-categoryId="@item.Id" asp-route-categoryName="@item.Name">
+                        @item.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+﻿@model UserModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>İletişim Bilgileri</h4>
+
+<h6>Ad:@Model.Name</h6>
+<h6>Soyad:@Model.SurName</h6>
+<h6>Email:@Model.Email</h6>
+<h6>Telefon Numarası:@Model.PhoneNumber</h6>
+<h6>Adres:@Model.Adress</h6>

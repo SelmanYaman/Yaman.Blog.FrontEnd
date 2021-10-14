@@ -1,0 +1,18 @@
+﻿@model List<BlogListModel>
+
+
+<div class="col-lg-12">
+    <div class="sidebar-widget category">
+        <h4 class="mb-3">Son Eklenenler</h4>
+        <ul>
+            @foreach (var item in Model)
+            {
+                <li>
+                    <a asp-action="Details" asp-route-blogId="@item.Id">
+                        @item.Title
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
